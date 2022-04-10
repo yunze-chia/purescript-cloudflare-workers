@@ -1,0 +1,13 @@
+name = "example-basic"
+type = "javascript"
+route = ''
+zone_id = ''
+usage_model = ''
+compatibility_flags = []
+workers_dev = true
+compatibility_date = "2022-03-19"
+
+[build.upload]
+format = "modules"
+dir = "dist"
+main = "index.mjs"

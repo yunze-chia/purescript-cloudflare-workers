@@ -1,0 +1,19 @@
+{
+    "env": {
+        "serviceworker": true,
+        "commonjs": true,
+        "es2021": true
+    },
+    "parserOptions": {
+        "sourceType": "module"
+    },
+    "extends": [
+        "eslint:recommended"
+    ],
+    "rules": {
+        "semi": [
+            2,
+            "never"
+        ]
+    }
+}
