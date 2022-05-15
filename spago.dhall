@@ -3,6 +3,7 @@
   [ "aff"
   , "aff-promise"
   , "affjax"
+  , "affjax-node"
   , "argonaut-codecs"
   , "argonaut-core"
   , "effect"

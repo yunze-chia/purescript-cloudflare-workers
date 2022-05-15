@@ -3,22 +3,22 @@
   "scripts": {
     "lint": "purty validate src && purty validate test && eslint src",
     "lint:fix": "purty src --write && purty test --write && eslint src --fix",
-    "test:kvserver": "spago build && miniflare worker.testkv.mjs",
+    "test:kvserver": "spago build && npm run bundle worker.testkv.mjs && miniflare dist/index.mjs",
     "test:integration": "spago test -m Test.Integration",
     "clean": "rm -rf output dist",
-    "example-basic:build:ps": "spago build --config examples/basic/spago.dhall",
-    "example-basic:build:w": "esbuild examples/basic/worker.mjs --bundle --minify --tree-shaking=true --format=esm --target=esnext --outfile=dist/index.mjs",
-    "example-basic:serve": "npm run example-basic:build:ps && miniflare --wrangler-config=examples/basic/wrangler.toml examples/basic/worker.mjs",
-    "example-basic:deploy": "npm run clean && npm run example-basic:build:ps && npm run example-basic:build:w && wrangler --config=examples/basic/wrangler.toml publish"
+    "bundle": "esbuild $1 --bundle --minify --tree-shaking=true --format=esm --target=esnext --outfile=dist/index.mjs",
+    "example-basic:build": "spago build --config examples/basic/spago.dhall && npm run bundle examples/basic/worker.mjs",
+    "example-basic:serve": "npm run example-basic:build && miniflare --wrangler-config=examples/basic/wrangler.toml dist/index.mjs",
+    "example-basic:deploy": "npm run clean && npm run example-basic:build && wrangler --config=examples/basic/wrangler.toml publish"
   },
   "devDependencies": {
-    "@cloudflare/wrangler": "^1.19.11",
-    "esbuild": "^0.14.34",
-    "eslint": "^8.13.0",
+    "@cloudflare/wrangler": "^1.19.12",
+    "esbuild": "^0.14.39",
+    "eslint": "^8.15.0",
     "miniflare": "^2.4.0",
-    "purescript": "^0.14.9",
+    "purescript": "^0.15.0",
     "purty": "^7.0.0",
-    "spago": "^0.20.7",
+    "spago": "^0.20.9",
     "xhr2": "^0.2.1"
   }
 }

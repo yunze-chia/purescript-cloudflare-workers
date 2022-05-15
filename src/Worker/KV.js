@@ -1,13 +1,11 @@
-"use strict"
-
-exports.kvBinding_ = just => nothing => env => name => {
+export const kvBindingImpl = just => nothing => env => name => {
     let result = env[name]
     return result ? just(result) : nothing
 }
 
-exports.put_ = left => right => kv => key => value => expiration => expirationTtl => metadata => () => {
+export const putImpl = left => right => kv => key => value => expiration => expirationTtl => metadata => async () => {
     if (expiration === undefined && expirationTtl === undefined && metadata === undefined) {
-        return kv.put(key, value)
+        return await kv.put(key, value)
             .then(v => right(v))
             .catch(err => left(err))
     }
@@ -21,25 +19,25 @@ exports.put_ = left => right => kv => key => value => expiration => expirationTt
     if (metadata) {
         options.metadata = metadata
     }
-    return kv.put(key, value, options)
+    return await kv.put(key, value, options)
         .then(v => right(v))
         .catch(err => left(err))
 }
 
-exports.get_ = left => right => kv => key => () => {
-    return kv.get(key)
+export const getImpl = left => right => kv => key => async () => {
+    return await kv.get(key)
         .then(v => right(v))
         .catch(err => left(err))
 }
 
-exports.delete_ = left => right => kv => key => () => {
-    return kv.delete(key)
+export const deleteImpl = left => right => kv => key => async () => {
+    return await kv.delete(key)
         .then(v => right(v))
         .catch(err => left(err))
 }
 
-exports.list_ = left => right => kv => prefix => limit => cursor => () => {
-    return kv.list({ prefix, limit, cursor })
+export const listImpl = left => right => kv => prefix => limit => cursor => async () => {
+    return await kv.list({ prefix, limit, cursor })
         .then(v => right(v))
         .catch(err => left(err))
 }

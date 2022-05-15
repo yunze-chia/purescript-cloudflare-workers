@@ -25,13 +25,13 @@ import Worker.Internal (unsafeToValueOrUndefined)
 
 foreign import data KV :: Type
 
-foreign import kvBinding_ ::
+foreign import kvBindingImpl ::
   (forall x. x -> Maybe x) ->
   (forall x. Maybe x) ->
   Environment -> String -> Maybe KV
 
 kvBinding :: Environment -> String -> Maybe KV
-kvBinding = kvBinding_ Just Nothing
+kvBinding = kvBindingImpl Just Nothing
 
 type PutOptions a
   = { expiration :: Maybe Int
@@ -42,7 +42,7 @@ type PutOptions a
 defaultPutOptions :: forall a. PutOptions a
 defaultPutOptions = { expiration: Nothing, expirationTtl: Nothing, metadata: Nothing }
 
-foreign import put_ ::
+foreign import putImpl ::
   (forall x. String -> Either String x) ->
   (forall x. x -> Either String x) ->
   KV -> String -> String -> Foreign -> Foreign -> Foreign -> Effect (Promise (Either String Unit))
@@ -50,12 +50,12 @@ foreign import put_ ::
 put :: forall a. EncodeJson a => KV -> String -> String -> PutOptions a -> Aff (Either String Unit)
 put kv key value options =
   toAffE
-    $ put_ Left Right kv key value
+    $ putImpl Left Right kv key value
         (unsafeToValueOrUndefined options.expiration)
         (unsafeToValueOrUndefined options.expirationTtl)
         (unsafeToValueOrUndefined options.metadata)
 
-foreign import get_ ::
+foreign import getImpl ::
   (forall x. String -> Either String x) ->
   (forall x. x -> Either String x) ->
   KV -> String -> Effect (Promise (Either String Foreign))
@@ -63,18 +63,18 @@ foreign import get_ ::
 -- TODO: implement streaming
 get :: forall a. KV -> String -> Aff (Either String (Maybe a))
 get kv key = do
-  eitherForeign <- toAffE $ get_ Left Right kv key
+  eitherForeign <- toAffE $ getImpl Left Right kv key
   pure $ wrapNull <$> eitherForeign
   where
   wrapNull v = if isNull v then Nothing else Just (unsafeFromForeign v)
 
-foreign import delete_ ::
+foreign import deleteImpl ::
   (forall x. String -> Either String x) ->
   (forall x. x -> Either String x) ->
   KV -> String -> Effect (Promise (Either String Unit))
 
 delete :: KV -> String -> Aff (Either String Unit)
-delete kv key = toAffE $ delete_ Left Right kv key
+delete kv key = toAffE $ deleteImpl Left Right kv key
 
 type ListOptions
   = { prefix :: Maybe String, limit :: Maybe Int, cursor :: Maybe String }
@@ -94,7 +94,7 @@ type ListResult
     , cursor :: Maybe String
     }
 
-foreign import list_ ::
+foreign import listImpl ::
   (forall x. String -> Either String x) ->
   (forall x. x -> Either String x) ->
   KV -> Foreign -> Foreign -> Foreign -> Effect (Promise (Either String ListResult_))
@@ -103,7 +103,7 @@ list :: KV -> ListOptions -> Aff (Either String ListResult)
 list kv { prefix, limit, cursor } = do
   result <-
     toAffE
-      $ list_ Left Right kv
+      $ listImpl Left Right kv
           (unsafeToValueOrUndefined prefix)
           (unsafeToValueOrUndefined limit)
           (unsafeToValueOrUndefined cursor)

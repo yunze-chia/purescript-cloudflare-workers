@@ -1,7 +1,5 @@
-"use strict"
+export const undefinedImpl = undefined
 
-exports.undefined = undefined
-
-exports.debugStringify = v => {
+export const debugStringify = v => {
     return JSON.stringify(v)
 }

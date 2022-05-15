@@ -1,7 +1,7 @@
 module Test.Integration.KV where
 
 import Prelude
-import Affjax (defaultRequest, printError, request)
+import Affjax.Node (defaultRequest, printError, request)
 import Affjax.ResponseFormat (json, string)
 import Affjax.StatusCode (StatusCode(..))
 import Data.Argonaut.Decode (decodeJson, printJsonDecodeError)

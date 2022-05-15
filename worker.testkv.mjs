@@ -1,7 +1,7 @@
-import lib from "./output/Test.KVServer/index.js"
+import { run } from "./output/Test.KVServer/index.js"
 
 export default {
-    fetch(request, env, context) {
-        return lib.run(request)(env)(context)()
+    async fetch(request, env, context) {
+        return await run(request)(env)(context)()
     },
 }
