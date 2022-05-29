@@ -13,10 +13,10 @@
   },
   "devDependencies": {
     "@cloudflare/wrangler": "^1.19.12",
-    "esbuild": "^0.14.39",
-    "eslint": "^8.15.0",
-    "miniflare": "^2.4.0",
-    "purescript": "^0.15.0",
+    "esbuild": "^0.14.42",
+    "eslint": "^8.16.0",
+    "miniflare": "^2.5.0",
+    "purescript": "^0.15.2",
     "purty": "^7.0.0",
     "spago": "^0.20.9",
     "xhr2": "^0.2.1"
